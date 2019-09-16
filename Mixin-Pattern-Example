@@ -1,0 +1,56 @@
+var Perro = function ( params ) {
+// Valores por defecto
+	this.raza = params.raza || "Labrador";
+	this.color = params.color || "Marron";
+};
+
+// Mixin 1
+var SabuesoMixin = function () {};
+SabuesoMixin.prototype = {
+	rastrear: function () {
+	console.log( "rastreando..." );
+	},
+	cazar: function () {
+		console.log( "cazando..." );
+	},
+	perseguir: function () {
+		console.log( "hunting...." );
+	}
+};
+
+// Mixin 2
+var NadadorMixin = function () {};
+NadadorMixin.prototype = {
+	nadar: function () {
+		console.log( "nadando..." );
+	},
+	pescar: function () {
+		console.log( "pescando..." );
+}
+};
+function extender( claseReceptora, claseDonante ) {
+	// solo extendemos los metodos que pasamos por parametros
+	if ( arguments[2] ) {
+	for ( var i = 2, len = arguments.length; i < len; i++ ) {
+		claseReceptora.prototype[arguments[i]] = claseDonante.prototype[arguments[i]];
+		}
+	}
+	// extendemos todos los metodos
+	else {
+		for ( var nombreMetodo in claseDonante.prototype ) {
+			// comprobamos que ya no existiese un metodo llamado igual
+			if ( !claseReceptora.prototype[nombreMetodo] ) {
+			claseReceptora.prototype[nombreMetodo] = claseDonante.prototype[nombreMetodo];
+			}
+		}
+	}
+}
+
+extender(Perro,SabuesoMixin);
+//Extendemos solo metodos seleccionados
+extender(Perro,NadadorMixin,"nadar");
+// ahora creamos un Perro
+var puppy= new Perro({color:"negro"});
+// utilizamos los metodos heredados
+puppy.nadar();
+puppy.rastrear();
